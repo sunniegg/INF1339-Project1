@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Version 9a Table Grid for Display Segments</title>
+        <title>Version 9</title>
         <style>
             .standardTable {border: solid;
                             border-collapse: collapse;}
@@ -10,10 +10,16 @@
                       text-align: center;
                       background-color: black;
                       border-color: white;
-                      color: yellow;}
+                      color: yellow;
+                      vertical-align: top;}
             .sevenSegmentTable {color: white; border-color: white;
                                 border: solid; border-collapse: collapse;}
             .notesevenSegmentTable {border: none;}
+            .horizontal {width: 40px; height: 10px;}
+            .vertical {width: 10px; height: 40px;}
+            .red {background-color: red;}
+            .corner {width: 10px; height: 10px;}
+            .middle {width: 40px; height: 40px;}
         </style>
         <script>
             function display(number) {
@@ -29,8 +35,9 @@
                 
                 //send ssd singals to function illuminate_segments()
                 document.getElementById("illuminate_input").innerHTML=ssd
-                illuminate(ssd)
                 document.getElementById("illuminate_output").innerHTML='done'
+                illuminate(ssd)
+                
             }
             
             function bin2ssd(binary){
@@ -44,13 +51,13 @@
                 if (binary[2] == '1') {y = true}
                 if (binary[3] == '1') {z = true}
                 //"compute" the value of logical expression for each segment
-                var a = !w&x&z || w&!x&!y || !x&!y&!z || !w&y
-                var b = false
-                var c = false
-                var d = false
-                var e = false
-                var f = false
-                var g = false
+                var a = !w&!x&y&!z || !w&!x&y&z || !w&x&!y&z || !w&x&y&!z || !w&x&y&z || w&!x&!y&!z || w&!x&!y&z || !w&!x&!y&!z
+                var b = !w&!x&!y&z || !w&!x&y&!z || !w&!x&y&z || !w&x&!y&!z || !w&x&y&z || w&!x&!y&!z || w&!x&!y&z || !w&!x&!y&!z
+                var c = !w&!x&!y&z || !w&!x&y&z || !w&x&!y&!z || !w&x&!y&z || !w&x&y&!z || !w&x&y&z || w&!x&!y&!z || w&!x&!y&z || !w&!x&!y&!z
+                var d = !w&!x&y&!z || !w&!x&y&z || !w&x&!y&z || !w&x&y&!z || w&!x&!y&!z || w&!x&!y&z || !w&!x&!y&!z
+                var e = !w&!x&y&!z || !w&x&y&!z || w&!x&!y&!z || !w&!x&!y&!z
+                var f = !w&x&!y&!z || !w&x&!y&z || !w&x&y&!z || w&!x&!y&!z || w&!x&!y&z || !w&!x&!y&!z
+                var g = !w&!x&y&!z || !w&!x&y&z || !w&x&!y&!z || !w&x&!y&z || !w&x&y&!z || w&!x&!y&!z || w&!x&!y&z
                 //assemble and return the output
                 var output = ''
                 if (a) {output = output + '1'} else {output = output + '0'}
@@ -65,20 +72,34 @@
             
             function illuminate(signals) {
                 document.getElementById("segments").innerHTML = signals
-            if (signals[0] == '1') {
-                document.getElementById("segmentA").innerHTML ='ON'}
-            if (signals[1] == '1') {
-                document.getElementById("segmentB").innerHTML ='ON'}
-            if (signals[2] == '1') {
-                document.getElementById("segmentC").innerHTML ='ON'}
-            if (signals[3] == '1') {
-                document.getElementById("segmentD").innerHTML ='ON'}
-            if (signals[4] == '1') {
-                document.getElementById("segmentE").innerHTML ='ON'}
-            if (signals[5] == '1') {
-                document.getElementById("segmentF").innerHTML ='ON'}
-            if (signals[6] == '1') {
-                document.getElementById("segmentG").innerHTML ='ON'}
+                if (signals[0] == '1') {
+                    document.getElementById("segmentA").setAttribute("class","red")}
+                else {
+                    document.getElementById("segmentA").setAttribute("class","black")}
+                if (signals[1] == '1') {
+                    document.getElementById("segmentB").setAttribute("class","red")}
+                else {
+                    document.getElementById("segmentB").setAttribute("class","black")}
+                if (signals[2] == '1') {
+                    document.getElementById("segmentC").setAttribute("class","red")}
+                else {
+                    document.getElementById("segmentC").setAttribute("class","black")}
+                if (signals[3] == '1') {
+                    document.getElementById("segmentD").setAttribute("class","red")}
+                else {
+                    document.getElementById("segmentD").setAttribute("class","black")}
+                if (signals[4] == '1') {
+                    document.getElementById("segmentE").setAttribute("class","red")}
+                else {
+                    document.getElementById("segmentE").setAttribute("class","black")}
+                if (signals[5] == '1') {
+                    document.getElementById("segmentF").setAttribute("class","red")}
+                else {
+                    document.getElementById("segmentF").setAttribute("class","black")}
+                if (signals[6] == '1') {
+                    document.getElementById("segmentG").setAttribute("class","red")}
+                else {
+                    document.getElementById("segmentG").setAttribute("class","black")}
             }
             
             function dec2bin(decimal) {
@@ -105,7 +126,7 @@
         </script>
     </head>
     <body>
-        <h3>Version 9a Table Grid for Display Segments</h3>
+        <h3>Version 9</h3>
         <table class="standardTable">
             <tr>
                 <td class="blackbox"><h3>Keypad</h3>
@@ -121,39 +142,42 @@
                 <button type="button" onclick="display(0)">0</button>
                 </td>
                 <td class="blackbox"><h3>Decimal to Binary</h3>
-                <p id = "decimal_input">???</p>
-                <p id ="binary_output">???</p></td>
+                <p id = "decimal_input"></p>
+                <p id ="binary_output"></p>
+                <p id ="ssd"></p></td>
                 <td class="blackbox"><h3>Binary to SSD Signals</h3>
                     <p id="bin2ssd_input"></p>
                     <p id="bin2ssd_output"></p>
                 </td>
                 <td class="blackbox"><h3>Illuminate Segments</h3>
+                    <p id="illuminate_input"></p>
+                    <p id="illuminate_output"></p>
                     <p id="segments"></p>
                     <table>
                         <tr>
-                            <td class="notesevenSegmentTable">1</td>
-                            <td id="segmentA" class="sevenSegmentTable">A</td>
-                            <td class="notesevenSegmentTable">3</td>
+                            <td class="notesevenSegmentTable corner"></td>
+                            <td id="segmentA" class="sevenSegmentTable horizontal"></td>
+                            <td class="notesevenSegmentTable corner"></td>
                         </tr>
                         <tr>
-                            <td id="segmentF" class="sevenSegmentTable">F</td>
-                            <td class="notesevenSegmentTable">2</td>
-                            <td id="segmentB" class="sevenSegmentTable">B</td>
+                            <td id="segmentF" class="sevenSegmentTable vertical"></td>
+                            <td class="notesevenSegmentTable middle"></td>
+                            <td id="segmentB" class="sevenSegmentTable vertical"></td>
                         </tr>
                         <tr>
-                            <td class="notesevenSegmentTable">1</td>
-                            <td id="segmentG" class="sevenSegmentTable">G</td>
-                            <td class="notesevenSegmentTable">3</td>
+                            <td class="notesevenSegmentTable corner"></td>
+                            <td id="segmentG" class="sevenSegmentTable horizontal"></td>
+                            <td class="notesevenSegmentTable corner"></td>
                         </tr>
                         <tr>
-                            <td id="segmentE" class="sevenSegmentTable">E</td>
-                            <td class="notesevenSegmentTable">2</td>
-                            <td id="segmentC" class="sevenSegmentTable">C</td>
+                            <td id="segmentE" class="sevenSegmentTable vertical"></td>
+                            <td class="notesevenSegmentTable middle"></td>
+                            <td id="segmentC" class="sevenSegmentTable vertical"></td>
                         </tr>
                         <tr>
-                            <td class="notesevenSegmentTable">1</td>
-                            <td id="segmentD" class="sevenSegmentTable">D</td>
-                            <td class="notesevenSegmentTable">3</td>
+                            <td class="notesevenSegmentTable corner"></td>
+                            <td id="segmentD" class="sevenSegmentTable horizontal"></td>
+                            <td class="notesevenSegmentTable corner"></td>
                         </tr>
                     </table>
                 </td>
